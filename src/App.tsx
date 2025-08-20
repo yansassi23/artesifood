@@ -15,7 +15,8 @@ function App() {
   const [importMessage, setImportMessage] = useState<string | null>(null);
 
   const filteredClients = clients.filter(client =>
-    client.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+    (client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+     (client.whatsapp && client.whatsapp.replace(/\D/g, '').includes(searchTerm.replace(/\D/g, '')))) &&
     (filterStatus === 'all' || client.status === filterStatus)
   );
 
@@ -200,7 +201,7 @@ function App() {
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
             <input
               type="text"
-              placeholder="Buscar clientes..."
+              placeholder="Buscar por nome ou WhatsApp..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
