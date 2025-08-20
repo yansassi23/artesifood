@@ -16,7 +16,7 @@ function App() {
 
   const filteredClients = clients.filter(client =>
     (client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-     (client.whatsapp && client.whatsapp.replace(/\D/g, '').includes(searchTerm.replace(/\D/g, '')))) &&
+     (client.whatsapp || '').replace(/\D/g, '').includes(searchTerm.replace(/\D/g, ''))) &&
     (filterStatus === 'all' || client.status === filterStatus)
   );
 
@@ -344,7 +344,7 @@ function App() {
                           {client.whatsapp ? (
                             <a
                               href={`https://wa.me/${(() => {
-                                const cleanNumber = client.whatsapp.replace(/\D/g, '');
+                                const cleanNumber = (client.whatsapp || '').replace(/\D/g, '');
                                 return cleanNumber.startsWith('55') ? cleanNumber : `55${cleanNumber}`;
                               })()}`}
                               target="_blank"
