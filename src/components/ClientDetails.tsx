@@ -65,7 +65,9 @@ export const ClientDetails: React.FC<ClientDetailsProps> = ({
   const handleOpenWhatsApp = (whatsapp: string) => {
     // Remove any non-digit characters and format for WhatsApp
     const cleanNumber = whatsapp.replace(/\D/g, '');
-    const whatsappUrl = `https://wa.me/${cleanNumber}`;
+    // Add Brazil country code (+55) if not already present
+    const formattedNumber = cleanNumber.startsWith('55') ? cleanNumber : `55${cleanNumber}`;
+    const whatsappUrl = `https://wa.me/${formattedNumber}`;
     window.open(whatsappUrl, '_blank');
   };
   return (

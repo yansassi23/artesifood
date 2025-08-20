@@ -179,9 +179,9 @@ export const ClientFormModal: React.FC<ClientFormModalProps> = ({
               placeholder="5511987654321"
             />
             <p className="text-xs text-gray-500 mt-1">
-              <strong>Formato:</strong> Código do país + DDD + número (ex: 5511987654321)
+              <strong>Formato:</strong> DDD + número (ex: 11987654321)
               <br />
-              <span className="text-amber-600">⚠️ Sem o formato completo, o link do WhatsApp não funcionará</span>
+              <span className="text-green-600">✅ O código do Brasil (+55) será adicionado automaticamente</span>
             </p>
           </div>
 

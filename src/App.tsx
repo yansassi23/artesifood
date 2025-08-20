@@ -343,7 +343,10 @@ function App() {
                         <td className="px-6 py-4 whitespace-nowrap">
                           {client.whatsapp ? (
                             <a
-                              href={`https://wa.me/${client.whatsapp.replace(/\D/g, '')}`}
+                              href={`https://wa.me/${(() => {
+                                const cleanNumber = client.whatsapp.replace(/\D/g, '');
+                                return cleanNumber.startsWith('55') ? cleanNumber : `55${cleanNumber}`;
+                              })()}`}
                               target="_blank"
                               rel="noopener noreferrer"
                               onClick={(e) => e.stopPropagation()}
