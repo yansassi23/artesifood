@@ -14,6 +14,7 @@ export const useClients = () => {
       try {
         const parsedClients = JSON.parse(stored).map((client: any) => ({
           ...client,
+          whatsapp: String(client.whatsapp || ''),
           createdAt: new Date(client.createdAt),
           updatedAt: new Date(client.updatedAt),
         }));
@@ -112,7 +113,7 @@ export const useClients = () => {
         ifoodLink: row['Link iFood'] || '',
         googleLink: row['Link Google'] || '',
         instagram: row['Instagram'] || '',
-        whatsapp: row['WhatsApp'] || '',
+        whatsapp: String(row['WhatsApp'] || ''),
         status: getStatusFromLabel(row['Status']) || 'not_contacted',
         value: row['Valor do Projeto'] ? parseFloat(row['Valor do Projeto']) : undefined,
         paymentMethod: row['Forma de Pagamento'] || '',
