@@ -19,7 +19,7 @@ function App() {
 
   const filteredClients = clients.filter(client =>
     (client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-     (client.whatsapp || '').replace(/\D/g, '').includes(searchTerm.replace(/\D/g, ''))) &&
+     (/\d/.test(searchTerm) && (client.whatsapp || '').replace(/\D/g, '').includes(searchTerm.replace(/\D/g, '')))) &&
     (filterStatus === 'all' || client.status === filterStatus) &&
     (filterInterestLevel === 'all' || 
      (filterInterestLevel === 'unrated' && (!client.interestLevel || client.interestLevel === 0)) ||
