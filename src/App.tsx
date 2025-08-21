@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Users, Search, CheckCircle, TrendingUp, Download, Upload, ExternalLink, Camera, DollarSign, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Plus, Users, Search, CheckCircle, TrendingUp, Download, Upload, ExternalLink, Camera, DollarSign, ChevronLeft, ChevronRight, Star } from 'lucide-react';
 import { Client } from './types/client';
 import { ClientFormModal } from './components/ClientFormModal';
 import { ClientDetails } from './components/ClientDetails';
@@ -55,6 +55,22 @@ function App() {
       proposal_sent: clients.filter(c => c.status === 'proposal_sent').length,
       closed: clients.filter(c => c.status === 'closed').length,
       rejected: clients.filter(c => c.status === 'rejected').length,
+    },
+    interestLevelPercentages: {
+      unrated: clients.length > 0 ? (clients.filter(c => !c.interestLevel || c.interestLevel === 0).length / clients.length) * 100 : 0,
+      level1: clients.length > 0 ? (clients.filter(c => c.interestLevel === 1).length / clients.length) * 100 : 0,
+      level2: clients.length > 0 ? (clients.filter(c => c.interestLevel === 2).length / clients.length) * 100 : 0,
+      level3: clients.length > 0 ? (clients.filter(c => c.interestLevel === 3).length / clients.length) * 100 : 0,
+      level4: clients.length > 0 ? (clients.filter(c => c.interestLevel === 4).length / clients.length) * 100 : 0,
+      level5: clients.length > 0 ? (clients.filter(c => c.interestLevel === 5).length / clients.length) * 100 : 0,
+    },
+    interestLevelCounts: {
+      unrated: clients.filter(c => !c.interestLevel || c.interestLevel === 0).length,
+      level1: clients.filter(c => c.interestLevel === 1).length,
+      level2: clients.filter(c => c.interestLevel === 2).length,
+      level3: clients.filter(c => c.interestLevel === 3).length,
+      level4: clients.filter(c => c.interestLevel === 4).length,
+      level5: clients.filter(c => c.interestLevel === 5).length,
     },
   };
 
@@ -340,6 +356,119 @@ function App() {
                 </div>
                 <div className="text-2xl font-bold text-red-900">
                   {stats.statusPercentages.rejected.toFixed(1)}%
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Interest Level Breakdown */}
+        {clients.length > 0 && (
+          <div className="mb-8">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">Distribuição por Nível de Interesse</h2>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+              <div className="bg-white rounded-lg shadow-md p-4 border-l-4 border-gray-400">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium text-gray-600">Sem Avaliação</span>
+                  <span className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded-full">
+                    {stats.interestLevelCounts.unrated}
+                  </span>
+                </div>
+                <div className="text-2xl font-bold text-gray-900">
+                  {stats.interestLevelPercentages.unrated.toFixed(1)}%
+                </div>
+              </div>
+
+              <div className="bg-white rounded-lg shadow-md p-4 border-l-4 border-red-400">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center space-x-1">
+                    <span className="text-sm font-medium text-red-600">1 Estrela</span>
+                    <Star className="w-3 h-3 text-yellow-400" fill="currentColor" />
+                  </div>
+                  <span className="text-xs bg-red-100 text-red-700 px-2 py-1 rounded-full">
+                    {stats.interestLevelCounts.level1}
+                  </span>
+                </div>
+                <div className="text-2xl font-bold text-red-900">
+                  {stats.interestLevelPercentages.level1.toFixed(1)}%
+                </div>
+              </div>
+
+              <div className="bg-white rounded-lg shadow-md p-4 border-l-4 border-orange-400">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center space-x-1">
+                    <span className="text-sm font-medium text-orange-600">2 Estrelas</span>
+                    <div className="flex">
+                      <Star className="w-3 h-3 text-yellow-400" fill="currentColor" />
+                      <Star className="w-3 h-3 text-yellow-400" fill="currentColor" />
+                    </div>
+                  </div>
+                  <span className="text-xs bg-orange-100 text-orange-700 px-2 py-1 rounded-full">
+                    {stats.interestLevelCounts.level2}
+                  </span>
+                </div>
+                <div className="text-2xl font-bold text-orange-900">
+                  {stats.interestLevelPercentages.level2.toFixed(1)}%
+                </div>
+              </div>
+
+              <div className="bg-white rounded-lg shadow-md p-4 border-l-4 border-yellow-400">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center space-x-1">
+                    <span className="text-sm font-medium text-yellow-600">3 Estrelas</span>
+                    <div className="flex">
+                      <Star className="w-3 h-3 text-yellow-400" fill="currentColor" />
+                      <Star className="w-3 h-3 text-yellow-400" fill="currentColor" />
+                      <Star className="w-3 h-3 text-yellow-400" fill="currentColor" />
+                    </div>
+                  </div>
+                  <span className="text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full">
+                    {stats.interestLevelCounts.level3}
+                  </span>
+                </div>
+                <div className="text-2xl font-bold text-yellow-900">
+                  {stats.interestLevelPercentages.level3.toFixed(1)}%
+                </div>
+              </div>
+
+              <div className="bg-white rounded-lg shadow-md p-4 border-l-4 border-blue-400">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center space-x-1">
+                    <span className="text-sm font-medium text-blue-600">4 Estrelas</span>
+                    <div className="flex">
+                      <Star className="w-3 h-3 text-yellow-400" fill="currentColor" />
+                      <Star className="w-3 h-3 text-yellow-400" fill="currentColor" />
+                      <Star className="w-3 h-3 text-yellow-400" fill="currentColor" />
+                      <Star className="w-3 h-3 text-yellow-400" fill="currentColor" />
+                    </div>
+                  </div>
+                  <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full">
+                    {stats.interestLevelCounts.level4}
+                  </span>
+                </div>
+                <div className="text-2xl font-bold text-blue-900">
+                  {stats.interestLevelPercentages.level4.toFixed(1)}%
+                </div>
+              </div>
+
+              <div className="bg-white rounded-lg shadow-md p-4 border-l-4 border-green-400">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center space-x-1">
+                    <span className="text-sm font-medium text-green-600">5 Estrelas</span>
+                    <div className="flex">
+                      <Star className="w-3 h-3 text-yellow-400" fill="currentColor" />
+                      <Star className="w-3 h-3 text-yellow-400" fill="currentColor" />
+                      <Star className="w-3 h-3 text-yellow-400" fill="currentColor" />
+                      <Star className="w-3 h-3 text-yellow-400" fill="currentColor" />
+                      <Star className="w-3 h-3 text-yellow-400" fill="currentColor" />
+                    </div>
+                  </div>
+                  <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
+                    {stats.interestLevelCounts.level5}
+                  </span>
+                </div>
+                <div className="text-2xl font-bold text-green-900">
+                  {stats.interestLevelPercentages.level5.toFixed(1)}%
                 </div>
               </div>
             </div>
