@@ -12,6 +12,7 @@ function App() {
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState<string>('all');
+  const [filterInterestLevel, setFilterInterestLevel] = useState<string>('all');
   const [importMessage, setImportMessage] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const clientsPerPage = 50;
@@ -19,7 +20,10 @@ function App() {
   const filteredClients = clients.filter(client =>
     (client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
      (client.whatsapp || '').replace(/\D/g, '').includes(searchTerm.replace(/\D/g, ''))) &&
-    (filterStatus === 'all' || client.status === filterStatus)
+    (filterStatus === 'all' || client.status === filterStatus) &&
+    (filterInterestLevel === 'all' || 
+     (filterInterestLevel === 'unrated' && (!client.interestLevel || client.interestLevel === 0)) ||
+     (filterInterestLevel !== 'unrated' && client.interestLevel === parseInt(filterInterestLevel)))
   );
 
   // Calculate pagination
@@ -31,7 +35,7 @@ function App() {
   // Reset to first page when filters change
   React.useEffect(() => {
     setCurrentPage(1);
-  }, [searchTerm, filterStatus]);
+  }, [searchTerm, filterStatus, filterInterestLevel]);
 
   const stats = {
     total: clients.length,
@@ -501,6 +505,22 @@ function App() {
               <option value="proposal_sent">Proposta Enviada</option>
               <option value="closed">Fechado</option>
               <option value="rejected">Recusado</option>
+            </select>
+          </div>
+          
+          <div className="min-w-48">
+            <select
+              value={filterInterestLevel}
+              onChange={(e) => setFilterInterestLevel(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+            >
+              <option value="all">Todos os Níveis</option>
+              <option value="unrated">Sem Avaliação</option>
+              <option value="1">1 Estrela</option>
+              <option value="2">2 Estrelas</option>
+              <option value="3">3 Estrelas</option>
+              <option value="4">4 Estrelas</option>
+              <option value="5">5 Estrelas</option>
             </select>
           </div>
         </div>
