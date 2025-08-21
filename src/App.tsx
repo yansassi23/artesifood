@@ -40,6 +40,22 @@ function App() {
     totalRevenue: clients
       .filter(c => c.status === 'closed')
       .reduce((sum, client) => sum + (client.value || 0), 0),
+    statusPercentages: {
+      not_contacted: clients.length > 0 ? (clients.filter(c => c.status === 'not_contacted').length / clients.length) * 100 : 0,
+      contacted: clients.length > 0 ? (clients.filter(c => c.status === 'contacted').length / clients.length) * 100 : 0,
+      responded: clients.length > 0 ? (clients.filter(c => c.status === 'responded').length / clients.length) * 100 : 0,
+      proposal_sent: clients.length > 0 ? (clients.filter(c => c.status === 'proposal_sent').length / clients.length) * 100 : 0,
+      closed: clients.length > 0 ? (clients.filter(c => c.status === 'closed').length / clients.length) * 100 : 0,
+      rejected: clients.length > 0 ? (clients.filter(c => c.status === 'rejected').length / clients.length) * 100 : 0,
+    },
+    statusCounts: {
+      not_contacted: clients.filter(c => c.status === 'not_contacted').length,
+      contacted: clients.filter(c => c.status === 'contacted').length,
+      responded: clients.filter(c => c.status === 'responded').length,
+      proposal_sent: clients.filter(c => c.status === 'proposal_sent').length,
+      closed: clients.filter(c => c.status === 'closed').length,
+      rejected: clients.filter(c => c.status === 'rejected').length,
+    },
   };
 
   const handleAddClient = (clientData: Omit<Client, 'id' | 'createdAt' | 'updatedAt'>) => {
@@ -249,6 +265,86 @@ function App() {
             </div>
           </div>
         </div>
+
+        {/* Status Breakdown */}
+        {clients.length > 0 && (
+          <div className="mb-8">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">Distribuição por Status</h2>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+              <div className="bg-white rounded-lg shadow-md p-4 border-l-4 border-gray-400">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium text-gray-600">Não Contatado</span>
+                  <span className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded-full">
+                    {stats.statusCounts.not_contacted}
+                  </span>
+                </div>
+                <div className="text-2xl font-bold text-gray-900">
+                  {stats.statusPercentages.not_contacted.toFixed(1)}%
+                </div>
+              </div>
+
+              <div className="bg-white rounded-lg shadow-md p-4 border-l-4 border-blue-400">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium text-blue-600">Contatado</span>
+                  <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full">
+                    {stats.statusCounts.contacted}
+                  </span>
+                </div>
+                <div className="text-2xl font-bold text-blue-900">
+                  {stats.statusPercentages.contacted.toFixed(1)}%
+                </div>
+              </div>
+
+              <div className="bg-white rounded-lg shadow-md p-4 border-l-4 border-green-400">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium text-green-600">Respondeu</span>
+                  <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
+                    {stats.statusCounts.responded}
+                  </span>
+                </div>
+                <div className="text-2xl font-bold text-green-900">
+                  {stats.statusPercentages.responded.toFixed(1)}%
+                </div>
+              </div>
+
+              <div className="bg-white rounded-lg shadow-md p-4 border-l-4 border-yellow-400">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium text-yellow-600">Proposta Enviada</span>
+                  <span className="text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full">
+                    {stats.statusCounts.proposal_sent}
+                  </span>
+                </div>
+                <div className="text-2xl font-bold text-yellow-900">
+                  {stats.statusPercentages.proposal_sent.toFixed(1)}%
+                </div>
+              </div>
+
+              <div className="bg-white rounded-lg shadow-md p-4 border-l-4 border-emerald-400">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium text-emerald-600">Fechado</span>
+                  <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-1 rounded-full">
+                    {stats.statusCounts.closed}
+                  </span>
+                </div>
+                <div className="text-2xl font-bold text-emerald-900">
+                  {stats.statusPercentages.closed.toFixed(1)}%
+                </div>
+              </div>
+
+              <div className="bg-white rounded-lg shadow-md p-4 border-l-4 border-red-400">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium text-red-600">Recusado</span>
+                  <span className="text-xs bg-red-100 text-red-700 px-2 py-1 rounded-full">
+                    {stats.statusCounts.rejected}
+                  </span>
+                </div>
+                <div className="text-2xl font-bold text-red-900">
+                  {stats.statusPercentages.rejected.toFixed(1)}%
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Search */}
         <div className="mb-6 flex flex-col sm:flex-row gap-4">
