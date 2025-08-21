@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowLeft, ExternalLink, Edit3, Save, Calendar, MessageCircle, CheckCircle, X, Clock, DollarSign, XCircle, User, Phone, Instagram, CreditCard } from 'lucide-react';
+import { ArrowLeft, ExternalLink, Edit3, Save, Calendar, MessageCircle, CheckCircle, X, Clock, DollarSign, XCircle, User, Phone, Instagram, CreditCard, Trash2 } from 'lucide-react';
 import { Client } from '../types/client';
 import { getStatusConfig } from '../utils/statusConfig';
 import { ClientFormModal } from './ClientFormModal';
@@ -8,18 +8,21 @@ interface ClientDetailsProps {
   client: Client;
   onBack: () => void;
   onUpdateClient: (updatedClient: Client) => void;
+  onDeleteClient: (clientId: string) => void;
 }
 
 export const ClientDetails: React.FC<ClientDetailsProps> = ({
   client,
   onBack,
   onUpdateClient,
+  onDeleteClient,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [notes, setNotes] = useState(client.notes);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [paymentMethodInput, setPaymentMethodInput] = useState(client.paymentMethod || '');
   const [isEditingPayment, setIsEditingPayment] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   
   const statusConfig = getStatusConfig(client.status);
 
@@ -58,6 +61,11 @@ export const ClientDetails: React.FC<ClientDetailsProps> = ({
     setIsEditingPayment(false);
   };
 
+  const handleDeleteClient = () => {
+    onDeleteClient(client.id);
+    onBack();
+  };
+
   const handleOpenLink = (url: string) => {
     window.open(url, '_blank');
   };
@@ -70,6 +78,7 @@ export const ClientDetails: React.FC<ClientDetailsProps> = ({
     const whatsappUrl = `https://wa.me/${formattedNumber}`;
     window.open(whatsappUrl, '_blank');
   };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="bg-white shadow-sm">
@@ -89,13 +98,22 @@ export const ClientDetails: React.FC<ClientDetailsProps> = ({
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center space-x-4">
               <h1 className="text-3xl font-bold text-gray-900">{client.name}</h1>
-              <button
-                onClick={() => setIsEditModalOpen(true)}
-                className="flex items-center space-x-2 px-3 py-1 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-md transition-colors"
-              >
-                <Edit3 className="w-4 h-4" />
-                <span>Editar</span>
-              </button>
+              <div className="flex items-center space-x-2">
+                <button
+                  onClick={() => setIsEditModalOpen(true)}
+                  className="flex items-center space-x-2 px-3 py-1 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-md transition-colors"
+                >
+                  <Edit3 className="w-4 h-4" />
+                  <span>Editar</span>
+                </button>
+                <button
+                  onClick={() => setShowDeleteModal(true)}
+                  className="flex items-center space-x-2 px-3 py-1 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-md transition-colors"
+                >
+                  <Trash2 className="w-4 h-4" />
+                  <span>Excluir</span>
+                </button>
+              </div>
             </div>
             <div
               className={`px-4 py-2 rounded-full text-sm font-medium ${statusConfig.bgColor}`}
@@ -379,6 +397,62 @@ export const ClientDetails: React.FC<ClientDetailsProps> = ({
         }}
         clientToEdit={client}
       />
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
+            <div className="flex items-center justify-between p-6 border-b">
+              <h2 className="text-xl font-semibold text-gray-900 flex items-center space-x-2">
+                <Trash2 className="w-5 h-5 text-red-600" />
+                <span>Confirmar Exclusão</span>
+              </h2>
+              <button
+                onClick={() => setShowDeleteModal(false)}
+                className="text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+
+            <div className="p-6">
+              <div className="mb-4">
+                <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+                  <div className="flex items-center space-x-2">
+                    <XCircle className="w-5 h-5 text-red-600" />
+                    <span className="font-medium text-red-900">Atenção!</span>
+                  </div>
+                  <p className="text-red-700 mt-2">
+                    Esta ação não pode ser desfeita.
+                  </p>
+                </div>
+                <p className="text-gray-700">
+                  Tem certeza que deseja excluir o cliente <strong>"{client.name}"</strong>?
+                </p>
+                <p className="text-sm text-gray-500 mt-2">
+                  Todas as informações, observações e histórico deste cliente serão permanentemente removidos.
+                </p>
+              </div>
+
+              <div className="flex space-x-3">
+                <button
+                  onClick={() => setShowDeleteModal(false)}
+                  className="flex-1 px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={handleDeleteClient}
+                  className="flex-1 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors flex items-center justify-center space-x-2"
+                >
+                  <Trash2 className="w-4 h-4" />
+                  <span>Excluir Cliente</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

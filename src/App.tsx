@@ -125,6 +125,10 @@ function App() {
           updateClient(updatedClient);
           setSelectedClient(updatedClient);
         }}
+        onDeleteClient={(clientId) => {
+          deleteClient(clientId);
+          setSelectedClient(null);
+        }}
       />
     );
   }
